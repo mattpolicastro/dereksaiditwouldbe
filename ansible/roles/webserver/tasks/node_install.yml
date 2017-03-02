@@ -1,0 +1,56 @@
+# Follows nodesource manual install:
+# https://github.com/nodesource/distributions#manual-installation
+# Also, as SNI is wonky in the guest's python install, using shell to add the
+# apt keys. Background available here:
+---
+- name: Add deadsnakes ppa
+  apt_repository:
+    repo: 'ppa:fkrull/deadsnakes-python2.7'
+    state: present
+  register: deadsnakes
+
+- name: Update Python to >= 2.7.9
+  apt:
+    name: python2.7
+    state: latest
+    update_cache: yes
+    cache_valid_time: '{{ apt_cache_time }}'
+  when: deadsnakes|success
+  register: python_update
+
+- name: Fetch nodesource apt_key
+  get_url:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    dest: '{{ nodesource_key_dest }}'
+    force: yes
+  when: python_update|success
+  register: apt_key_fetch
+
+- name: Add nodesource apt_key
+  shell: apt-key add {{ nodesource_key_dest }}
+  register: apt_key_add
+  when: apt_key_fetch|success
+
+- name: Add deb repo for Node.js {{ nodejs_version }}
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ansible_distribution_release }} main"
+    state: present
+
+- name: Add deb-src repo for Node.js {{ nodejs_version }}
+  apt_repository:
+    repo: "deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ansible_distribution_release }} main"
+    state: present
+
+- name: Install Node.js {{ nodejs_version }}
+  apt:
+    name: nodejs={{ nodejs_version|regex_replace('x', '') }}*
+    state: present
+    update_cache: yes
+    cache_valid_time: '{{ apt_cache_time }}'
+
+- name: Install Node.js build-essential
+  apt:
+    name: build-essential
+    state: present
+    update_cache: yes
+    cache_valid_time: '{{ apt_cache_time }}'

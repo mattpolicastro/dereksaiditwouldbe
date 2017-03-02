@@ -1,0 +1,5 @@
+---
+nodejs_version: "6.x"
+nodesource_key_dest: /tmp/nodesource.key
+app_bundle_name: "{{ node_app_user }}_app.tar.gz"
+app_install_dir: /home/{{ node_app_user }}/app

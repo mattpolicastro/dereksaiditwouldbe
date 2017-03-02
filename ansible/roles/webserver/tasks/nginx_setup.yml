@@ -1,0 +1,24 @@
+---
+- name: Set up Nginx configuration
+  template:
+    src: roles/webserver/templates/nginx_conf.j2
+    dest: /etc/nginx/sites-available/{{ node_app_user }}.conf
+  register: conf_updated
+
+- name: Remove defualt configuration
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  register: default_removed
+
+- name: Link new configuration
+  file:
+    src: /etc/nginx/sites-available/{{ node_app_user }}.conf
+    dest: /etc/nginx/sites-enabled/{{ node_app_user }}.conf
+    state: link
+  register: conf_linked
+
+- name: Restart nginx
+  become: true
+  service: name=nginx state=restarted
+  when: conf_updated|changed or default_removed|changed or conf_linked|changed

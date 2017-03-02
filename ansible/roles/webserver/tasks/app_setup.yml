@@ -1,0 +1,70 @@
+---
+- name: Create system user for Node.js app
+  user:
+    name: '{{ node_app_user }}'
+    shell: /bin/bash
+    password: '{{ node_app_user_password }}'
+  register: app_system_user
+
+- name: Bundle the app files
+  local_action:
+    module: archive
+    path:
+      - ../Gulpfile.js
+      - ../package.json
+      - ../src/
+    dest: ./{{ app_bundle_name }}
+  register: app_bundled
+
+# - name: Clean bundle destination
+#   file: path={{ app_install_dir }} state=absent
+#   register: dest_cleaned
+
+- name: Create bundle destination
+  file: path={{ app_install_dir }} state=directory
+  # when: dest_cleaned|success
+  register: dest_created
+
+- name: Unpack the app bundle
+  unarchive:
+    src: ./{{ app_bundle_name }}
+    dest: '{{ app_install_dir }}'
+    owner: '{{ node_app_user }}'
+    list_files: yes
+  when: dest_created|success and app_bundled|success
+
+- name: Remove the local bundle
+  local_action:
+    module: file
+    path: ./{{ app_bundle_name }}
+    state: absent
+
+# Forever + node.js taken/modified from:
+# http://www.jeffgeerling.com/blog/start-nodejs-app-with-forever-and-ansible
+- name: Install Forever for managing Node.js apps
+  npm:
+    name: forever
+    global: yes
+    state: present
+
+- name: Install Gulp for building CSS, etc.
+  npm:
+    name: gulp-cli
+    global: yes
+    state: present
+
+- name: Install sqlite3
+  apt:
+    name: sqlite3
+    state: present
+
+- name: Install npm packages from package.json
+  npm: path={{ app_install_dir }} state=present
+
+- name: Reset file permissions for {{ node_app_user }}
+  file:
+    name: "{{ app_install_dir }}"
+    state: directory
+    group: "{{ node_app_user }}"
+    owner: "{{ node_app_user }}"
+    recurse: yes

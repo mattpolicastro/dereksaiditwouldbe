@@ -1,0 +1,22 @@
+---
+# Secure login/root access; borrowed from:
+# https://github.com/vitalk/ansible-secure-ssh/blob/master/tasks/main.yml
+- name: Enable root password
+  user: name={{ root_user }} password={{ root_user_password }}
+  register: root_password_added
+  when: root_user is defined and root_user_password is defined
+
+- name: Disable empty password login
+  lineinfile: dest={{ ssh_config }} regexp="^#?PermitEmptyPasswords" line="PermitEmptyPasswords no"
+  when: ssh_config is defined
+  notify: restart sshd
+
+- name: Disable remote root login
+  lineinfile: dest={{ ssh_config }} regexp="^#?PermitRootLogin" line="PermitRootLogin no"
+  when: ssh_config is defined and root_password_added|success
+  notify: restart sshd
+
+- name: Disable password login
+  lineinfile: dest={{ ssh_config }} regexp="^#?PasswordAuthentication" line="PasswordAuthentication no"
+  when: ssh_config is defined and root_password_added|success
+  notify: restart sshd

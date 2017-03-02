@@ -1,0 +1,25 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "script"
+  },
+  "rules": {
+    "indent": [ "error", 2 ],
+    "quotes": [ 2, "single" ],
+    "linebreak-style": [ 2, "unix" ],
+    "semi": [ 2, "always" ],
+    "strict": [ "error", "global" ],
+    "no-console": 0
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "plugins": [ "html" ],
+  "settings": {
+    "html/indent": "+2",
+    "html/report-bad-indent": 1
+  }
+}

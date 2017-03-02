@@ -1,0 +1,12 @@
+---
+- name: Install Node.js + npm
+  include: node_install.yml
+- name: Install Nginx
+  include: nginx_install.yml
+- name: Set up Nginx configuration
+  include: nginx_setup.yml
+- name: Set up the app
+  include: app_setup.yml
+- name: Start and manage the node app
+  become_user: "{{ node_app_user }}"
+  include: app_launch.yml

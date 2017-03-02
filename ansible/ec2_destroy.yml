@@ -1,0 +1,28 @@
+---
+- name: Destroy All AWS EC2 Instances
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  tasks:
+  - name: Destroy AWS instances
+    ec2:
+      count_tag:
+        ansible_group: "{{ aws_ansible_group_tag }}"
+      exact_count: 0
+      group: "{{ aws_security_group }}"
+      image: "{{ aws_ami }}"
+      instance_tags:
+        ansible_group: "{{ aws_ansible_group_tag }}"
+      instance_type: "{{ aws_instance_type }}"
+      key_name: "{{ aws_key }}"
+      region: "{{ aws_region }}"
+      wait: true
+    register: ec2
+
+  - name: Remove destroyed instances from global hosts file
+    become: true
+    lineinfile:
+      dest: /etc/ansible/hosts
+      regexp: "^{{ item }}.*$"
+      state: absent
+    with_items: "{{ec2.instance_ids}}"

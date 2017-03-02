@@ -1,0 +1,28 @@
+{
+  "name": "cs6065hw2",
+  "version": "1.0.0",
+  "description": "Simple REST API for weather data.",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.uc.edu/policamw/cs6065hw2.git"
+  },
+  "author": "Matt Policastro",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "csv-parse": "^1.2.0",
+    "express": "^4.14.1",
+    "knex": "^0.12.7",
+    "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {
+    "eslint": "^3.14.1",
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
+    "jsdoc-to-markdown": "^3.0.0"
+  }
+}

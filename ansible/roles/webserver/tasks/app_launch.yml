@@ -1,0 +1,19 @@
+---
+  # Forever + node.js taken/modified from:
+  # http://www.jeffgeerling.com/blog/start-nodejs-app-with-forever-and-ansible
+- name: Check list of Forever-managed apps
+  command: forever list
+  register: forever_list
+  changed_when: false
+
+- name: Start app (if not already running)
+  command: forever start {{ app_install_dir }}/src/app.js
+  environment:
+    prod: true
+  when: "forever_list.stdout.find('{{ app_install_dir }}/src/app.js') == -1"
+
+- name: Restart app (if already running)
+  command: forever restart {{ app_install_dir }}/src/app.js
+  environment:
+    prod: true
+  when: "forever_list.stdout.find('{{ app_install_dir }}/src/app.js') != -1"
