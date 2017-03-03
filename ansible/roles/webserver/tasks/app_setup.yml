@@ -12,6 +12,7 @@
     path:
       - ../Gulpfile.js
       - ../package.json
+      - ../REST.md
       - ../src/
     dest: ./{{ app_bundle_name }}
   register: app_bundled

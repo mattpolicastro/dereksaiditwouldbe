@@ -2,7 +2,7 @@ server {
   listen 80 default_server;
   listen [::]:80 default_server;
 
-  server_name {{ letsencrypt_domain }};
+  server_name {{ app_domain }};
 
   gzip      on;
   gzip_types      text/css;
