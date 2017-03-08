@@ -78,17 +78,11 @@ function post(req, res) {
       db('weather').where('DATE', data.DATE).update({
         TMAX: data.TMAX,
         TMIN: data.TMIN
-      }).then((updateRows) => {
-        if (updateRows !== 0) {
-          res.status(409).send(
-            'Pre-existing data found: ' + JSON.stringify(rows[0]) + '\n' +
-            'Updated to: ' + JSON.stringify(data)
-          );
-        }
+      }).then(() => {
+        res.status(201).json({ DATE: data.DATE });
       }).catch((err) => {
         res.status(500).send(err);
       });
-
     }
   });
 }
@@ -101,7 +95,7 @@ router.delete('/historical/:date', deleteDate);
  */
 function deleteDate(req, res) {
   db('weather').where('DATE', req.params.date).del().then((count) => {
-    res.status(201).json({'Records deleted': count});
+    res.status(200).json({'Records deleted': count});
   }).catch((err) => {
     console.log(err);
     res.status(500).send(err);
