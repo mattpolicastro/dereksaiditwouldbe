@@ -1,6 +1,5 @@
 'use strict';
 
-const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -14,6 +13,8 @@ const port = 3000;
 const app = express();
 const docs = fs.readFileSync(path.join(__dirname, '../REST.md'), { encoding: 'utf8' });
 
+// Add the static dir of public CSS and JS files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Add the JSON body parser
 app.use(bodyParser.json());
