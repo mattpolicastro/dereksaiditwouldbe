@@ -29,11 +29,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.enable('view cache');
 
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', { layout: false, vue: true });
 });
 
 app.get('/docs', (req, res) => {
-  res.render('docs', { title: 'API Docs', contents: docs });
+  res.render('index', { contents: docs, layout: false, title: 'API Docs' });
 });
 
 // Mount the router for the API endpoints

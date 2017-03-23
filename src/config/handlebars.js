@@ -7,8 +7,6 @@ const marked = require('marked');
 module.exports = {
   // Set the default file extension
   extname: '.hbs',
-  // Define the default layout
-  defaultLayout: 'main',
   // Define global helpers
   helpers: {
     // Render markdown

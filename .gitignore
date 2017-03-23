@@ -30,7 +30,7 @@ node_modules
 src/daily.db
 
 # Sass dependency directories and generated CSS
-src/public/sass/bourbon
-src/public/sass/base
-src/public/sass/neat
-src/public/css
+src/views/styles/bourbon
+src/views/styles/base
+src/views/styles/neat
+src/public/
