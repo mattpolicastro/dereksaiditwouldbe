@@ -6,12 +6,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
 </head>
 <body>
-	<h1>Derek Said It Would Be Like This...{{#if title}} {{title}}{{/if}}</h1>
+	<h1><a href ="/">Derek Said It Would Be Like This...</a>{{#if title}} {{title}}{{/if}}</h1>
+	<p><a href="https://www.youtube.com/watch?v=_NTn4m4qcdY">He really said it would be like this. </a><a href="https://www.youtube.com/watch?v=aG2a1WIwks8">No, seriously, just like this.</a></p>
 {{#if vue}}
 	<div id="app"></div>
 	<script src="/js/bundle.js"></script>
 {{else}}
-	{{marked contents}}
+{{marked contents}}
 {{/if}}
+	<footer>
+		<p><a href="/docs">Looking for an API reference?</a></p>
+		<p><a href="https://darksky.net/poweredby/" target="_blank">Powered by Dark Sky</a></p>
+	</footer>
 </body>
 </html>

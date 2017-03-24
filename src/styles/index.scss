@@ -1,0 +1,89 @@
+@import "bourbon/bourbon";
+@import "neat/neat";
+@import "base/base";
+@import "../../node_modules/chartist/dist/scss/chartist";
+
+$dark: #0571b0;
+$light: #92c5de;
+$ds-dark: #808080;
+$ds-light: #bababa;
+
+$break-point: 64em;
+
+body {
+  @media (max-width: $break-point) {
+    padding: 0 .5em;
+  }
+  margin: 0;
+  * {
+    margin: 0 auto;
+    max-width: 64em;
+  }
+}
+
+h1, h1 + p, footer {
+  padding-top: 1em;
+  text-align: center;
+}
+
+.warn {
+  color: red;
+}
+
+.picker {
+  @include grid-container;
+  @media (min-width: $break-point) {
+    padding-top: 2em;
+    * {
+      height: 3em;
+      line-height: 3em;
+      margin-bottom: 0;
+    }
+    label, button {
+      padding: 0;
+      @include grid-column(2);
+    }
+    input {
+      @include grid-column(8);
+    }
+    p {
+      @include grid-column(12);
+    }
+  }
+  @media (max-width: $break-point) {
+    * {
+      display: block;
+      text-align: center;
+      margin: .5em auto;
+    }
+    input {
+      width: 50%;
+    }
+  }
+}
+
+// Fix x-axis labels and re-colour the data series
+.forecast {
+  max-width: $break-point * 2 / 3;
+  .ct-label.ct-horizontal {
+    transform-origin: left;
+    transform: rotate(90deg) translateY(25%);
+  }
+  .tmaxes * {
+    stroke: $dark;
+  }
+  .tmins * {
+    stroke: $light;
+  }
+  .ds-tmaxes * {
+    stroke: $ds-dark;
+  }
+  .ds-tmins * {
+    stroke: $ds-light;
+  }
+}
+
+.options {
+  text-align: center;
+  input { vertical-align: baseline; }
+}

@@ -16,7 +16,7 @@ const sourcemaps  = require('gulp-sourcemaps');
 const jsdoc       = require('jsdoc-to-markdown');
 const vueify      = require('vueify');
 
-const BROWSER_SYNC_DELAY    = 1000;
+const BROWSER_SYNC_DELAY    = 2000;
 const NODEMON_RESTART_DELAY = 5000;
 
 const DOCS_DICT = require(path.resolve(__dirname, 'src/config/docs_dict'));
@@ -24,12 +24,12 @@ const DOCS_DICT = require(path.resolve(__dirname, 'src/config/docs_dict'));
 const VIEWS_PATH  = 'src/views/';
 const PUBLIC_PATH = 'src/public/';
 
-const STYLES_GLOB = VIEWS_PATH + 'styles/*.scss';
+const STYLES_GLOB = 'src/styles/*.scss';
 const SERVER_RESTART_GLOBS = [
   'src/app.js',
   'src/routes.js',
   'src/config/**.js',
-  'src/views/**.hbs'
+  'src/views/index.hbs'
 ];
 
 gulp.task('compile-docs', (done) => {
