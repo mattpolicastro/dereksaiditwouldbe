@@ -26,8 +26,11 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+# Ignore database file in repo
+src/daily.db
+
 # Sass dependency directories and generated CSS
-src/public/sass/bourbon
-src/public/sass/base
-src/public/sass/neat
-src/public/css
+src/styles/bourbon
+src/styles/base
+src/styles/neat
+src/public/

@@ -2,9 +2,16 @@
 
 const path = require('path');
 const router = require('express').Router();
+const axios = require('axios');
+const moment = require('moment-timezone');
 // Had tried to use .from('weather') here to prevent repetition, but doing so
 // would lead to odd behaviour where queries would persist between requests
+
 const db = require(path.join(__dirname, 'config/knex'));
+
+const DARKSKY_KEY = '5572cfc4e29fe31a8d3289eb4ded07eb';
+const CIN_LAT  =  39.1015;
+const CIN_LONG = -84.5125;
 
 /**
  * Representation of maximum and minimum temperatures for a date.
@@ -109,24 +116,45 @@ router.get('/forecast/:date', getForecast);
  * @return {array} Array of DateTemps objects for forecast.
  */
 function getForecast(req, res) {
-  db('weather').select('rowid', '*').where('DATE', req.params.date).then((rows) => {
-    if (rows.length === 0) {
-      res.status(404).send('Date outside viable prediction range.');
-    } else {
-      let currentRow = rows[0].rowid;
-      db('weather').select().whereBetween('rowid', [currentRow, currentRow + 6]).then((rows) => {
-        let result = rows.map((date) => {
-          return new DateTemps(date.DATE, date.TMAX_PRED, date.TMIN_PRED);
+  if (isNaN(req.params.date)) {
+    res.status(400).send('Not a valid date. Please use YYYYMMDD format.');
+  } else {
+    db('weather').select('rowid', '*').where('DATE', req.params.date).then((rows) => {
+      if (rows.length === 0) {
+        res.status(404).send('Date outside viable prediction range.');
+      } else {
+        let currentRow = rows[0].rowid;
+        db('weather').select().whereBetween('rowid', [currentRow, currentRow + 6]).then((rows) => {
+          let result = rows.map((date) => {
+            return new DateTemps(date.DATE, date.TMAX_PRED, date.TMIN_PRED);
+          });
+          res.send(result);
+          return;
+        }).catch((err) => {
+          res.status(500).send(err);
         });
-        res.send(result);
-        return;
-      }).catch((err) => {
-        res.status(500).send(err);
-      });
-    }
-  }).catch((err) => {
-    res.status(500).send(err);
-  });
+      }
+    }).catch((err) => {
+      res.status(500).send(err);
+    });
+  }
+}
+
+// Undocumented route for fetching DarkSky data with no safety checking.
+// Routing through the server because I didn't want to be messing with
+// API keys on the client browser.
+router.get('/darksky/:date', getDarkSky);
+function getDarkSky(req, res) {
+  let reqDate = moment(req.params.date).tz('America/New_York');
+
+  axios(`https://api.darksky.net/forecast/${DARKSKY_KEY}/${CIN_LAT},${CIN_LONG},${reqDate.format()}`)
+    .then((ax_res) => {
+      res.send(ax_res.data.daily.data[0]);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send(err);
+    });
 }
 
 module.exports = router;

@@ -1,6 +1,5 @@
 'use strict';
 
-const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -14,6 +13,8 @@ const port = 3000;
 const app = express();
 const docs = fs.readFileSync(path.join(__dirname, '../REST.md'), { encoding: 'utf8' });
 
+// Add the static dir of public CSS and JS files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Add the JSON body parser
 app.use(bodyParser.json());
@@ -28,7 +29,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.enable('view cache');
 
 app.get('/', (req, res) => {
-  res.render('index', { contents: docs });
+  res.render('index', { layout: false, vue: true });
+});
+
+app.get('/docs', (req, res) => {
+  res.render('index', { contents: docs, layout: false, title: 'API Docs' });
 });
 
 // Mount the router for the API endpoints
