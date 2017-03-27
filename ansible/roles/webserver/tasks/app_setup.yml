@@ -59,13 +59,19 @@
     name: sqlite3
     state: present
 
+- name: Install git
+  apt:
+    name: git
+    state: present
+
 - name: Install npm packages from package.json
-  npm: path={{ app_install_dir }} state=present
+  npm: path={{ app_install_dir }} state=present production=yes
 
 - name: Reset file permissions for {{ node_app_user }}
   file:
     name: "{{ app_install_dir }}"
     state: directory
+
     group: "{{ node_app_user }}"
     owner: "{{ node_app_user }}"
     recurse: yes
