@@ -1,0 +1,20 @@
+{
+  "aws_ami": "ami-41d48e24",
+  "aws_ami_default_user": "ubuntu",
+  "aws_ansible_group_tag": "server_group_name",
+  "aws_instance_count": 1,
+  "aws_instance_type": "t2.nano",
+  "aws_key": "name_of_key_for_security_group",
+  "aws_region": "us-east-2",
+  "aws_security_group": "security_group_name",
+  "apt_cache_time": 3000,
+  "app_domain": "target.domain.biz",
+  "node_app_port": 3000,
+  "node_app_user": "appuser",
+  "node_app_user_password": "$6$rounds=hashedpass",
+  "node_app_user_password_plain": "pass",
+  "root_user": "root",
+  "root_user_password": "$6$rounds=hashedpass",
+  "roo_user_password_plain": "pass"
+  "ssh_config": "/etc/ssh/sshd_config"
+}
